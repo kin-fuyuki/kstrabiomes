@@ -1,11 +1,11 @@
 {
 	"schemaVersion": 1,
-	"id": "examplemod",
+	"id": "kstrabiomes",
 	"version": "${version}",
-	"name": "Example Mod",
+	"name": "kstrabiomes",
 	"description": "This mod aims to help new BTA modders.",
 	"authors": [
-		"Turnip Labs"
+		"kinfuyuki"
 	],
 	"contact": {
 		"homepage": "",
@@ -16,20 +16,20 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"turniplabs.examplemod.ExampleMod"
+			"kn.kinfuyuki.kstrabiomes.main"
 		],
 		"beforeGameStart": [
-			"turniplabs.examplemod.ExampleMod"
+			"kn.kinfuyuki.kstrabiomes.main"
 		],
 		"afterGameStart": [
-			"turniplabs.examplemod.ExampleMod"
+			"kn.kinfuyuki.kstrabiomes.main"
 		],
 		"recipesReady": [
-			"turniplabs.examplemod.ExampleMod"
+			"kn.kinfuyuki.kstrabiomes.main"
 		]
 	},
 	"mixins": [
-		"examplemod.mixins.json"
+		"kstrabiomes.mixin.json"
 	],
 	"depends": {
 		"fabricloader": ">=${fabricloader}",
