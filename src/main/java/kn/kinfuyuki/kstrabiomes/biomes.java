@@ -1,11 +1,16 @@
 package kn.kinfuyuki.kstrabiomes;
 
+import kn.kinfuyuki.kstrabiomes.mixin.biomeprovideroverworldaccessor;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.block.Blocks;
 import net.minecraft.core.entity.Mob;
 import net.minecraft.core.entity.SpawnListEntry;
 import net.minecraft.core.enums.MobCategory;
 import net.minecraft.core.world.biome.Biome;
 import net.minecraft.core.world.biome.Biomes;
+import net.minecraft.core.world.biome.data.BiomeRange;
+import net.minecraft.core.world.biome.data.BiomeRangeMap;
+import net.minecraft.core.world.biome.provider.BiomeProviderOverworld;
 import net.minecraft.core.world.weather.Weather;
 import net.minecraft.core.world.weather.Weathers;
 import org.slf4j.Logger;
@@ -23,26 +28,24 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 import static kn.kinfuyuki.kstrabiomes.biomeambiance.BGMUSIC;
 import static tiny.TERM.fatal;
 
 public class biomes {
-	public static Map<String,Map<String,Biome>> XTRABIOMES;
-	public static Map<String,Map<String, Icon>> XTRABIOMESICONS;
-	public static Map<String,Map<String,biomeambiance>> AMBIANCES;
+	public static Map<String,Map<String,biomeambiance>> XTRABIOMES=new HashMap<>();
+	public static Map<String,Map<String, Icon>> XTRABIOMESICONS=new HashMap<>();
 	public static class biomedata{
 		public final String generator;
 		public final boolean custombiomeclass;
-		public final float mintemperature, minhumidity, minaltitude, minvariety;
-		public final float maxtemperature, maxhumidity, maxaltitude, maxvariety;
-		public final float fog,chancecustommusic;
-		public final int colorR, colorG, colorB;
+		public final double mintemperature, minhumidity, minaltitude, minvariety;
+		public final double maxtemperature, maxhumidity, maxaltitude, maxvariety;
+		public final double fog,chancecustommusic;
 
 		public final Color skycolorMORNING;
 		public final Color skycolorDAY;
 		public final Color skycolorNIGHT;
-		public final Color skycolorEVENING;
 		public final String topblock;
 		public final String fillerblock;
 		public final String[] blockedweathers,music;
@@ -51,7 +54,7 @@ public class biomes {
 		public final String customtreeclass;
 		public final String[] spawnablemonsters, spawnablecreatures,
 				spawnablewatercreatures, spawnableambientcreatures;
-		public biomedata(String namespace,String filepath) throws TDF_ERR {
+		public biomedata(String namespace,String filepath,Logger logger) throws TDF_ERR {
 
 			TDF_FILE file=new TDF_FILE(
 				Minecraft.getMinecraft().getMinecraftDir().toPath()
@@ -61,10 +64,10 @@ public class biomes {
 			try {
 				file.load();
 			} catch (TDF_ERR e) {
-				fatal("could not import "+filepath);
-				fatal(e.getMessage());
+				logger.error("could not import "+filepath);
+				logger.error(e.getMessage());
 			} catch (IOException e) {
-				fatal("could not import "+filepath);
+				logger.error("could not import "+filepath);
 			}
 			custombiomeclass=file.getbool(Arrays.asList("custombiomeclass"));
 			if (custombiomeclass)generator=file.getstring(Arrays.asList("generator"));
@@ -79,9 +82,6 @@ public class biomes {
 			maxaltitude = file.getfloat(Arrays.asList("maxaltitude"));
 			maxvariety = file.getfloat(Arrays.asList("maxvariety"));
 			chancecustommusic=file.getfloat(Arrays.asList("chancecustommusic"));
-			colorR = file.getint(Arrays.asList("colorR"));
-			colorG = file.getint(Arrays.asList("colorG"));
-			colorB = file.getint(Arrays.asList("colorB"));
 			skycolorMORNING=new Color(
 				file.getint(Arrays.asList("skycolorR_MORNING")),
 				file.getint(Arrays.asList("skycolorG_MORNING")),
@@ -99,11 +99,6 @@ public class biomes {
 				file.getint(Arrays.asList("skycolorB_NIGHT"))
 			);
 
-			skycolorEVENING = new Color(
-				file.getint(Arrays.asList("skycolorR_EVENING")),
-				file.getint(Arrays.asList("skycolorG_EVENING")),
-				file.getint(Arrays.asList("skycolorB_EVENING"))
-			);
 
 			topblock = file.getstring(Arrays.asList("topblock"));
 			fillerblock = file.getstring(Arrays.asList("fillerblock"));
@@ -124,7 +119,7 @@ public class biomes {
 			spawnablemonsters = monstersraw.split("\\r?\\n");
 			String musicraw = file.getstring(Arrays.asList("music"));
 			if (musicraw == null) musicraw = "";
-			music = monstersraw.split("\\r?\\n");
+			music = musicraw.split("\\r?\\n");
 
 			String creaturesraw = file.getstring(Arrays.asList("spawnablecreatures"));
 			if (creaturesraw == null) creaturesraw = "";
@@ -155,8 +150,8 @@ public class biomes {
 					file.getName().lastIndexOf(".")+1);
 				String nam=file.getName().substring(0,
 					file.getName().lastIndexOf("."));
-
-				if (extension.equals(".wav")){
+				if (extension.equals("wav")){
+					logger.warn("generating music: "+namespace+" "+nam);
 					{
 						try {
 							AudioInputStream aud = AudioSystem.getAudioInputStream(file);
@@ -171,6 +166,7 @@ public class biomes {
 		}
 	}
 	public static void registerbiomes(Logger logger){
+
 		File folder=new File(Minecraft.getMinecraft().getMinecraftDir(),"kstrabiomes");
 		for (File f:folder.listFiles()
 			 ) {
@@ -183,17 +179,34 @@ public class biomes {
 					file.getName().lastIndexOf(".")+1);
 				String nam=file.getName().substring(0,
 					file.getName().lastIndexOf("."));
-				if (extension.equals(".tdf")) {
+
+				if (extension.equals("tdf")) {
+					logger.warn("generating biome: "+"kstrabiomes:overworld."+namespace+"_"+nam);
 					biomedata data;
 					try {
-						data = new biomedata(namespace, file.getName());
+						data = new biomedata(namespace, file.getName(),logger);
 					} catch (TDF_ERR e) {
 						logger.error(e.getMessage());
 						continue;
 					}
-					Biome biome=new biomeambiance(nam,
-					data.skycolorMORNING,data.skycolorDAY,data.skycolorNIGHT,data.skycolorEVENING,data.fog
+					biomeambiance biome=new biomeambiance(nam,
+					data.skycolorMORNING,data.skycolorDAY,data.skycolorNIGHT, (float) data.fog, (float) data.chancecustommusic
 					);
+					for (String mus : data.music
+					) {
+						logger.error(mus);
+						File music=BGMUSIC.get(namespace).get(mus);
+						if (music!=null) {
+							try {
+								biome.musics.add(AudioSystem.getAudioInputStream(music));
+							} catch (Exception e) {
+								logger.error(e.getMessage());
+
+							}
+						}
+						else
+							logger.error("music " + mus + " described on file " + file.toString() + " does not exist");
+					}
 					{
 						ArrayList<Weather> blocked = new ArrayList<>();
 						for (String w : data.blockedweathers
@@ -203,8 +216,11 @@ public class biomes {
 							else
 								logger.error("weather " + w + " described on file " + file.toString() + " does not exist");
 						}
-						biome.blockedWeathers= (Weather[]) blocked.toArray();
+						biome.blockedWeathers= blocked.toArray(new Weather[0]);
 					}
+					biome.topBlock= Blocks.keyToIdMap.get("tile."+data.topblock).shortValue();
+					biome.fillerBlock= Blocks.keyToIdMap.get("tile."+data.fillerblock).shortValue();
+
 					{
 						List<SpawnListEntry>spawnableMonsterList=biome.getSpawnableList(MobCategory.monster);
 						spawnableMonsterList.clear();
@@ -275,8 +291,19 @@ public class biomes {
 					}
 
 
-					XTRABIOMES.get(namespace).put(nam,Biomes.register("kstra-"+namespace,biome));
-
+					XTRABIOMES.get(namespace).put(nam,(biomeambiance) Biomes.register(
+						"kstrabiomes:overworld."+namespace+"_"+nam,
+						biome
+					));
+					BiomeRangeMap map = biomeprovideroverworldaccessor.getBrm();
+					map.addRange(
+						biome,
+						new BiomeRange(
+							data.mintemperature,data.maxtemperature, data.minhumidity,data.maxhumidity,
+							data.minaltitude,data.maxaltitude,data.minvariety,data.maxvariety
+						)
+					);
+					logger.warn("this biome was generated: "+"kstrabiomes:overworld."+namespace+"_"+nam);
 					File pngpath=new File(f,nam+".png");
 					if (pngpath.exists()){
 						Icon ico;

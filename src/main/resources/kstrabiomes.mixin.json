@@ -1,11 +1,13 @@
 {
   "required": true,
   "package": "kn.kinfuyuki.kstrabiomes.mixin",
-  "compatibilityLevel": "JAVA_21",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [],
-  "client": [],
+  "client": [
+    "fogmgrmixin","soundenginemixin","worldclientmixin","biomeprovideroverworldaccessor","biomeprovideroverworldmixin",
+    "screenoptionsmixin","gamesettingsmixin"
+  ],
   "server": []
 }
