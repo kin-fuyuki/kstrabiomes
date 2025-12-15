@@ -2,54 +2,79 @@
 extra biomes + custom biomes configuration + ambiance mod
 
 the biomes must be stored under:
-.minecraft/kstrabiomes/\<choose a name for your biome package\>/*.tdf
+.minecraft/kstrabiomes/\<choose a name for your biome package\>/\<biome name\>.tdf
 
 [tiny data format reference](https://plugins.jetbrains.com/plugin/29360-tiny-lang/)
 
 biome example (all variables must exist and be customized):
 
     # the generator class for example
-    " generator net.minecraft.core.world.biome
-    B custombiomeclass
+    " generator net.minecraft.core.world.BiomeDesert
+    B custombiomeclass T
     
     # generation settings
-    f maxtemperature 0.01
-    f maxhumidity 0.01
-    f maxbiomeness 0.01
-    f maxveriety 0.01
-    
     f mintemperature 0.0
     f minhumidity 0.0
-    f minbiomeness 0.0
-    f minveriety 0.0
+    f minaltitude 0.0
+    f minvariety 0.0
+    
+    f maxtemperature 1.6
+    f maxhumidity 1.1
+    f maxaltitude 1.2
+    f maxvariety 1.05
+    
+    #this one will at times replace the original game music depending on the chance (0.0 - 1.0 range, where 1.0 is 100%)
+    f chancecustommusic 0.5
+    #music must be in the folder path like that: kstrabiomes/<your namespace>/*.ogg
+    #example:
+    #kstrabiomes/kinfuyuki/sonicomtalanspage.ogg
+    S music
+    sonicomtalanspage
+    sonicomtyournewhome
+    mistylk
+    pwidungeon15
+    pwietherblade17
+    tlbb
+    \
     
     # the grass and leaves color
-    i colorR 200
-    i colorG 255
-    i colorB 150
-    i skycolorR 0
-    i skycolorG 0
-    i skycolorB 150
-    i fogcolorR 0
-    i fogcolorG 0
-    i fogcolorB 150
+    i skycolorR_MORNING 63
+    i skycolorG_MORNING 63
+    i skycolorB_MORNING 0
+    i skycolorR_DAY 127
+    i skycolorG_DAY 127
+    i skycolorB_DAY 0
+    i skycolorR_NIGHT 0
+    i skycolorG_NIGHT 0
+    i skycolorB_NIGHT 63
+    
+    
+    f fog 2.0
     
     # block generators
-    " topblock minecraft:sand
-    " fillerblock minecraft:sandstone
+    " topblock mud.baked
+    " fillerblock granite
     
     # not allowed weathers like rain and snow and stuff
     S blockedweathers
-    OVERWORLD_STORM
+    overworld.snow
+    overworld.storm
+    overworld.rain
+    overworld.clear
     \
-    B hassnow T
+    B hassnow F
     
     # the tree class, you can pass any class here
     B customtree F
     " customtreeclass nah
     
     # what can spawn
+    
+    #how it works: net.minecraft.core.entity.type.mob frequency
     S spawnablemonsters
+    net.minecraft.core.entity.monster.MobSpider 10
+    net.minecraft.core.entity.monster.MobSkeleton 10
+    
     \
     S spawnablecreatures
     \
@@ -57,6 +82,7 @@ biome example (all variables must exist and be customized):
     \
     S spawnableambientcreatures
     \
+
 
 
 # support
