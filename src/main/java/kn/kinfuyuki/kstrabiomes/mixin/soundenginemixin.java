@@ -26,6 +26,7 @@ import paulscode.sound.SoundSystem;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 
@@ -39,124 +40,78 @@ public class soundenginemixin {
 	@Shadow private Minecraft mc;
 	@Shadow public int ticksBeforeMusic;
 
-	@Unique private Clip clip;
 	@Unique private float lastmusicvolume = -1f;
 	@Unique private boolean waspaused = false;
 
 	@Shadow private boolean isLoaded() { return false; }
 
-	@Unique
-	private void applyvolume() {
-		if (clip != null && options != null) {
-			float vol = SoundCategoryHelper.getEffectiveVolume(SoundCategory.MUSIC, options);
-			if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
-				FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-				if (vol <= 0f) {
-					gain.setValue(-80f);
-				} else {
-					float db = 20f * (float) Math.log10(vol);
-					float min = gain.getMinimum();
-					float max = gain.getMaximum();
-					gain.setValue(MathHelper.clamp(db, min, max));
-				}
-			}
-		}
-	}
-
-	@Unique
-	private void stopcustommusic() {
-		if (clip != null) {
-			clip.stop();
-			clip.flush();
-			clip.close();
-			clip = null;
-		}
-		lastmusicvolume = -1f;
-	}
 	@Inject(method ="stopMusic",at = @At("HEAD"))
 	public void stopMusic(CallbackInfo c){
-		stopcustommusic();
 		ticksBeforeMusic=50;
 	}
+
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
 	public void tick(CallbackInfo c) {
 		if (clientinitializer.MUSIC.value) {
 			WorldClient world = this.mc.currentWorld;
-
-
 			if (options != null) {
+
 				float currentvol = SoundCategoryHelper.getEffectiveVolume(SoundCategory.MUSIC, options);
 				if (currentvol != lastmusicvolume) {
-					applyvolume();
 					lastmusicvolume = currentvol;
-
-					if (currentvol <= 0f && clip != null && clip.isRunning()) {
-						clip.stop();
-						waspaused = true;
-					} else if (currentvol > 0f && waspaused && clip != null) {
-						clip.start();
-						waspaused = false;
+					if (soundSystem.playing("BgMusic")) {
+						soundSystem.setVolume("BgMusic", currentvol * 1.0f);
 					}
 				}
-			}
-			Biome biome = world.getBlockBiome((int) this.mc.thePlayer.x, (int) this.mc.thePlayer.y, (int) this.mc.thePlayer.z);
+				if (currentvol <= 0f && soundSystem.playing("BgMusic") && !waspaused) {
+					soundSystem.pause("BgMusic");
+					waspaused = true;
+				} else if (currentvol > 0f && waspaused) {
+					soundSystem.play("BgMusic");
 
-			boolean iscustom = biome instanceof biomeambiance;
-
-
-
-			if (clip != null) {
-				if (!clip.isRunning() && !waspaused) {
-					stopcustommusic();
-					this.ticksBeforeMusic = 200;
+					waspaused = false;
 				}
+			}
+			if (soundSystem.playing("BgMusic") || soundSystem.playing("Streaming")) {
 				c.cancel();
 				return;
 			}
-
+			Biome biome = world.getBlockBiome((int) this.mc.thePlayer.x, (int) this.mc.thePlayer.y, (int) this.mc.thePlayer.z);
+			boolean iscustom = biome instanceof biomeambiance;
+			LOGGER.error("to next music:" + Integer.valueOf(this.ticksBeforeMusic).toString());
 			if (this.ticksBeforeMusic > 0) {
 				--this.ticksBeforeMusic;
 				c.cancel();
 				return;
 			}
-
 			if (iscustom) {
-				try {
-					biomeambiance biomee = (biomeambiance) biome;
-					if (random.nextFloat() < biomee.musicchance) {
-						int which = random.nextInt(biomee.musics.size());
-						AudioInputStream ais = biomee.musics.get(which);
-
-						clip = AudioSystem.getClip();
-						clip.open(ais);
-						ais.close();
-
-						applyvolume();
-						lastmusicvolume = SoundCategoryHelper.getEffectiveVolume(SoundCategory.MUSIC, options);
-
-						clip.start();
-
-						long lenmicro = clip.getMicrosecondLength();
-						int lendelay = (int) ((lenmicro / 1000000L) * 20L) + 200;
-						this.ticksBeforeMusic = lendelay;
-
-						waspaused = false;
-					} else {
-						playvanillamusic();
+				biomeambiance biomee = (biomeambiance) biome;
+				if (random.nextFloat() < biomee.musicchance) {
+					int which = random.nextInt(biomee.musics.size());
+					File musicfile = biomee.musics.get(which);
+					int lendelay = 200;
+					this.ticksBeforeMusic = lendelay;
+					try {
+						lock.lock();
+						soundSystem.backgroundMusic("BgMusic", musicfile.toURI().toURL(), musicfile.getName(), false);
+						soundSystem.setPitch("BgMusic", 1.0f);
+						soundSystem.setVolume("BgMusic", SoundCategoryHelper.getEffectiveVolume(SoundCategory.MUSIC, this.options) * 1.0f);
+						soundSystem.play("BgMusic");
+					} catch (Exception e) {
+						LOGGER.error(e.getMessage());
+					} finally {
+						lock.unlock();
 					}
-				} catch (Exception e) {
-					LOGGER.error( e.getMessage());
-					stopcustommusic();
+					waspaused = false;
+				} else {
 					playvanillamusic();
 				}
 			} else {
 				playvanillamusic();
 			}
-
 			c.cancel();
 		}
 	}
-
 	@Unique
 	private void playvanillamusic() {
 		try {
@@ -165,16 +120,13 @@ public class soundenginemixin {
 				if (soundSystem.playing("BgMusic") || soundSystem.playing("Streaming")) {
 					return;
 				}
-
 				SoundEvent event;
 				if (this.mc.thePlayer.world.canBlockSeeTheSky(MathHelper.floor(this.mc.thePlayer.x), MathHelper.floor(this.mc.thePlayer.y), MathHelper.floor(this.mc.thePlayer.z))) {
 					event = SoundRepository.SOUNDS.getRandomSoundFromCategory("music.");
 				} else {
 					event = SoundRepository.SOUNDS.getSoundEvent("ambient.cave");
 				}
-
 				if (event == null) return;
-
 				SoundEntry entry = event.getRandomEntry();
 				if (entry != null) {
 					this.ticksBeforeMusic = 3400;
@@ -190,4 +142,6 @@ public class soundenginemixin {
 			lock.unlock();
 		}
 	}
+
+
 }

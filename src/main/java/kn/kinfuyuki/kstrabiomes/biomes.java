@@ -151,16 +151,8 @@ public class biomes {
 					file.getName().lastIndexOf(".")+1);
 				String nam=file.getName().substring(0,
 					file.getName().lastIndexOf("."));
-				if (extension.equals("wav")){
+				if (extension.equals("ogg")){
 					logger.warn("generating music: "+namespace+" "+nam);
-					{
-						try {
-							AudioInputStream aud = AudioSystem.getAudioInputStream(file);
-						} catch (Exception e) {
-							logger.error(e.getMessage());
-							continue;
-						}
-					}
 					BGMUSIC.get(namespace).put(nam,file);
 				}
 			}
@@ -199,12 +191,7 @@ public class biomes {
 							logger.error(mus);
 							File music = BGMUSIC.get(namespace).get(mus);
 							if (music != null) {
-								try {
-									biome.musics.add(AudioSystem.getAudioInputStream(music));
-								} catch (Exception e) {
-									logger.error(e.getMessage());
-
-								}
+								biome.musics.add(music);
 							} else
 								logger.error("music " + mus + " described on file " + file.toString() + " does not exist");
 						}

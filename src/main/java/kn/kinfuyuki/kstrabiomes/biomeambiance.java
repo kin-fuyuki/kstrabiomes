@@ -23,9 +23,8 @@ import java.util.Map;
 public class biomeambiance extends BiomeDesert {
 	public final Color morning,day,night;
 	public final float fogintensity;
-
 	public static Map<String,Map<String, File>> BGMUSIC=new HashMap<>();
-	public ArrayList<AudioInputStream> musics=new ArrayList<>();
+	public ArrayList<File> musics=new ArrayList<>();
 	public final float musicchance;
 	public biomeambiance(String key,
 						  Color morning, Color day, Color night, float fogintensity,float musicchance) {
