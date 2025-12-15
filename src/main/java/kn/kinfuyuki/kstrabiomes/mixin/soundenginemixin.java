@@ -41,7 +41,6 @@ public class soundenginemixin {
 	@Unique private Clip clip;
 	@Unique private float lastmusicvolume = -1f;
 	@Unique private boolean waspaused = false;
-	@Unique private Thread loadingthread;
 
 	@Shadow private boolean isLoaded() { return false; }
 
@@ -72,10 +71,6 @@ public class soundenginemixin {
 			clip = null;
 		}
 		lastmusicvolume = -1f;
-		if (loadingthread != null) {
-			loadingthread.interrupt();
-			loadingthread = null;
-		}
 	}
 	@Inject(method ="stopMusic",at = @At("HEAD"))
 	public void stopMusic(CallbackInfo c){
@@ -86,6 +81,7 @@ public class soundenginemixin {
 	public void tick(CallbackInfo c) {
 		if (main.MUSIC.value) {
 			WorldClient world = this.mc.currentWorld;
+
 
 			if (options != null) {
 				float currentvol = SoundCategoryHelper.getEffectiveVolume(SoundCategory.MUSIC, options);
@@ -105,6 +101,8 @@ public class soundenginemixin {
 			Biome biome = world.getBlockBiome((int) this.mc.thePlayer.x, (int) this.mc.thePlayer.y, (int) this.mc.thePlayer.z);
 
 			boolean iscustom = biome instanceof biomeambiance;
+
+
 
 			if (clip != null) {
 				if (!clip.isRunning() && !waspaused) {
@@ -128,48 +126,25 @@ public class soundenginemixin {
 						int which = random.nextInt(biomee.musics.size());
 						AudioInputStream ais = biomee.musics.get(which);
 
-						if (loadingthread != null && loadingthread.isAlive()) {
-							playvanillamusic();
-						} else {
-							loadingthread = new Thread(() -> {
-								try {
-									Clip newclip = AudioSystem.getClip();
-									newclip.open(ais);
-									ais.close();
+						clip = AudioSystem.getClip();
+						clip.open(ais);
+						ais.close();
 
-									synchronized (this) {
-										if (Thread.currentThread().isInterrupted()) {
-											newclip.close();
-											return;
-										}
-										clip = newclip;
+						applyvolume();
+						lastmusicvolume = SoundCategoryHelper.getEffectiveVolume(SoundCategory.MUSIC, options);
 
-										applyvolume();
-										lastmusicvolume = SoundCategoryHelper.getEffectiveVolume(SoundCategory.MUSIC, options);
+						clip.start();
 
-										clip.start();
+						long lenmicro = clip.getMicrosecondLength();
+						int lendelay = (int) ((lenmicro / 1000000L) * 20L) + 200;
+						this.ticksBeforeMusic = lendelay;
 
-										long lenmicro = clip.getMicrosecondLength();
-										int lendelay = (int) ((lenmicro / 1000000L) * 20L) + 200;
-										this.ticksBeforeMusic = lendelay;
-
-										waspaused = false;
-									}
-								} catch (Exception e) {
-									LOGGER.error(e.getMessage());
-									synchronized (this) {
-										playvanillamusic();
-									}
-								}
-							});
-							loadingthread.start();
-							this.ticksBeforeMusic = 20;
-						}
+						waspaused = false;
 					} else {
 						playvanillamusic();
 					}
 				} catch (Exception e) {
-					LOGGER.error(e.getMessage());
+					LOGGER.error( e.getMessage());
 					stopcustommusic();
 					playvanillamusic();
 				}
@@ -185,7 +160,7 @@ public class soundenginemixin {
 	private void playvanillamusic() {
 		try {
 			lock.lock();
-			if (this.isLoaded() && options != null && SoundCategoryHelper.getEffectiveVolume(SoundCategory.MUSIC, this.options) != 0.0F) {
+			if (this.isLoaded() && options != null && SoundCategoryHelper.getEffectiveVolume(SoundCategory.MUSIC, options) != 0.0F) {
 				if (soundSystem.playing("BgMusic") || soundSystem.playing("Streaming")) {
 					return;
 				}
