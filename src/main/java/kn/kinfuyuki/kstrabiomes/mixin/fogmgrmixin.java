@@ -1,6 +1,7 @@
 package kn.kinfuyuki.kstrabiomes.mixin;
 
 import kn.kinfuyuki.kstrabiomes.biomeambiance;
+import kn.kinfuyuki.kstrabiomes.clientinitializer;
 import kn.kinfuyuki.kstrabiomes.config;
 import kn.kinfuyuki.kstrabiomes.main;
 import net.minecraft.client.Minecraft;
@@ -56,7 +57,7 @@ public class fogmgrmixin {
 
 		WorldClient world = this.mc.currentWorld;
 			Biome biome = world.getBlockBiome((int) this.mc.thePlayer.x, (int) this.mc.thePlayer.y, (int) this.mc.thePlayer.z);
-			if (main.AMBIANCE.value&&biome instanceof biomeambiance) {
+			if (clientinitializer.AMBIANCE.value&&biome instanceof biomeambiance) {
 				biomeambiance biomee=(biomeambiance)biome;
 				GL11.glFogfv(2918, this.buffer(this.fogRed, this.fogGreen, this.fogBlue, 0.5F));
 				GL11.glNormal3f(0.0F, -1.0F, 0.0F);
@@ -118,7 +119,7 @@ public class fogmgrmixin {
 	public void updateFogColor(float partialTick, CallbackInfo ci) {
 		WorldClient world = this.mc.currentWorld;
 			Biome biome = world.getBlockBiome((int) this.mc.thePlayer.x, (int) this.mc.thePlayer.y, (int) this.mc.thePlayer.z);
-			if (main.AMBIANCE.value&&biome instanceof biomeambiance) {
+			if (clientinitializer.AMBIANCE.value&&biome instanceof biomeambiance) {
 				float renderDistanceScale = 1.0F / (float) (this.mc.gameSettings.renderDistance.highest + 8 - (Integer) this.mc.gameSettings.renderDistance.value);
 				renderDistanceScale = 1.0F - (float) Math.pow((double) renderDistanceScale, (double) 0.25F);
 

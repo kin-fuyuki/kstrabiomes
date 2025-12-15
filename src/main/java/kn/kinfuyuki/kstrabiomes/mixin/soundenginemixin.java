@@ -1,6 +1,7 @@
 package kn.kinfuyuki.kstrabiomes.mixin;
 
 import kn.kinfuyuki.kstrabiomes.biomeambiance;
+import kn.kinfuyuki.kstrabiomes.clientinitializer;
 import kn.kinfuyuki.kstrabiomes.main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenMainMenu;
@@ -79,7 +80,7 @@ public class soundenginemixin {
 	}
 	@Inject(method = "tick", at = @At("HEAD"), cancellable = true)
 	public void tick(CallbackInfo c) {
-		if (main.MUSIC.value) {
+		if (clientinitializer.MUSIC.value) {
 			WorldClient world = this.mc.currentWorld;
 
 

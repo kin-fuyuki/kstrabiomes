@@ -15,13 +15,13 @@
 	"license": "CC0-1.0",
 	"environment": "*",
 	"entrypoints": {
+		"server": [
+			"kn.kinfuyuki.kstrabiomes.serverinitializer"
+		],
+		"client": [
+			"kn.kinfuyuki.kstrabiomes.clientinitializer"
+		],
 		"main": [
-			"kn.kinfuyuki.kstrabiomes.main"
-		],
-		"beforeGameStart": [
-			"kn.kinfuyuki.kstrabiomes.main"
-		],
-		"afterGameStart": [
 			"kn.kinfuyuki.kstrabiomes.main"
 		],
 		"recipesReady": [

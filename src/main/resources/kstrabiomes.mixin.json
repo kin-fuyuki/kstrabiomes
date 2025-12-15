@@ -4,9 +4,11 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "mixins": [],
+  "mixins": [
+    "biomeprovideroverworldaccessor","biomeprovideroverworldmixin"
+  ],
   "client": [
-    "fogmgrmixin","soundenginemixin","worldclientmixin","biomeprovideroverworldaccessor","biomeprovideroverworldmixin",
+    "fogmgrmixin","soundenginemixin","worldclientmixin",
     "screenoptionsmixin","gamesettingsmixin"
   ],
   "server": []

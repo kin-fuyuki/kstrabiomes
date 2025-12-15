@@ -6,6 +6,14 @@ the biomes must be stored under:
 
 [tiny data format reference](https://plugins.jetbrains.com/plugin/29360-tiny-lang/)
 
+# instructions
+### requirements to run:
+[download this jar file](https://github.com/kin-fuyuki/tiny-java/releases/download/0.8_1/tiny-java21-0.8_1.jar)
+and on multimc/prism you click on:
+edit instance -> version -> add to minecraft.jar
+select the tiny library jar file.
+done now you can run!
+### creating biomes:
 biome example (all variables must exist and be customized):
 
     # the generator class for example

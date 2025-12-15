@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static kn.kinfuyuki.kstrabiomes.biomeambiance.BGMUSIC;
+import static kn.kinfuyuki.kstrabiomes.main.getmc;
 import static tiny.TERM.fatal;
 
 public class biomes {
@@ -57,7 +58,7 @@ public class biomes {
 		public biomedata(String namespace,String filepath,Logger logger) throws TDF_ERR {
 
 			TDF_FILE file=new TDF_FILE(
-				Minecraft.getMinecraft().getMinecraftDir().toPath()
+				getmc().toPath()
 					.resolve("kstrabiomes").resolve(namespace).resolve(filepath)
 					.toString()
 			);
@@ -167,7 +168,7 @@ public class biomes {
 	}
 	public static void registerbiomes(Logger logger){
 
-		File folder=new File(Minecraft.getMinecraft().getMinecraftDir(),"kstrabiomes");
+		File folder=new File(getmc(),"kstrabiomes");
 		for (File f:folder.listFiles()
 			 ) {
 			String namespace=f.getName();
@@ -192,20 +193,21 @@ public class biomes {
 					biomeambiance biome=new biomeambiance(nam,
 					data.skycolorMORNING,data.skycolorDAY,data.skycolorNIGHT, (float) data.fog, (float) data.chancecustommusic
 					);
-					for (String mus : data.music
-					) {
-						logger.error(mus);
-						File music=BGMUSIC.get(namespace).get(mus);
-						if (music!=null) {
-							try {
-								biome.musics.add(AudioSystem.getAudioInputStream(music));
-							} catch (Exception e) {
-								logger.error(e.getMessage());
+					if (!main.ISSERVER){
+						for (String mus : data.music
+						) {
+							logger.error(mus);
+							File music = BGMUSIC.get(namespace).get(mus);
+							if (music != null) {
+								try {
+									biome.musics.add(AudioSystem.getAudioInputStream(music));
+								} catch (Exception e) {
+									logger.error(e.getMessage());
 
-							}
+								}
+							} else
+								logger.error("music " + mus + " described on file " + file.toString() + " does not exist");
 						}
-						else
-							logger.error("music " + mus + " described on file " + file.toString() + " does not exist");
 					}
 					{
 						ArrayList<Weather> blocked = new ArrayList<>();
