@@ -9,9 +9,11 @@ import turniplabs.halplibe.util.RecipeEntrypoint;
 public class main implements ModInitializer, RecipeEntrypoint, GameStartEntrypoint {
 	public static final String MOD_ID = "kstrabiomes";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
 	@Override
 	public void onInitialize() {
-
+		biomes.registermusic(LOGGER);
+		biomes.registerbiomes(LOGGER);
 	}
 
 	@Override
