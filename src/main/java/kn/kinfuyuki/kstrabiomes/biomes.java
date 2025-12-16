@@ -38,23 +38,91 @@ public class biomes {
 	public static Map<String,Map<String,biomeambiance>> XTRABIOMES=new HashMap<>();
 	public static Map<String,Map<String, Icon>> XTRABIOMESICONS=new HashMap<>();
 	public static class biomedata{
-		public final String generator;
-		public final boolean custombiomeclass;
-		public final double mintemperature, minhumidity, minaltitude, minvariety;
-		public final double maxtemperature, maxhumidity, maxaltitude, maxvariety;
-		public final double fog,chancecustommusic;
+		public String generator;
+		public boolean custombiomeclass;
+		public double mintemperature, minhumidity, minaltitude, minvariety;
+		public double maxtemperature, maxhumidity, maxaltitude, maxvariety;
+		public double fog,chancecustommusic;
 
-		public final Color skycolorMORNING;
-		public final Color skycolorDAY;
-		public final Color skycolorNIGHT;
-		public final String topblock;
-		public final String fillerblock;
-		public final String[] blockedweathers,music;
-		public final boolean hassnow;
-		public final boolean customtree;
-		public final String customtreeclass;
-		public final String[] spawnablemonsters, spawnablecreatures,
+		public Color skycolorMORNING;
+		public Color skycolorDAY;
+		public Color skycolorNIGHT;
+		public String topblock;
+		public String fillerblock;
+		public String[] blockedweathers,music;
+		public boolean customtree;
+		public String customtreeclass;
+		public String[] spawnablemonsters, spawnablecreatures,
 				spawnablewatercreatures, spawnableambientcreatures;
+
+		public void save(String namespace,String filepath,Logger logger)throws TDF_ERR{
+			TDF_FILE file=new TDF_FILE(
+				getmc().toPath()
+					.resolve("kstrabiomes").resolve(namespace).resolve(filepath)
+					.toString()
+			);
+
+			file.setbool(Arrays.asList("custombiomeclass"),custombiomeclass);
+			if(custombiomeclass){
+				file.setstring(Arrays.asList("generator"),generator);
+			}
+
+			file.setfloat(Arrays.asList("mintemperature"),(float)mintemperature);
+			file.setfloat(Arrays.asList("minhumidity"),(float)minhumidity);
+			file.setfloat(Arrays.asList("minaltitude"),(float)minaltitude);
+			file.setfloat(Arrays.asList("minvariety"),(float)minvariety);
+			file.setfloat(Arrays.asList("fog"),(float)fog);
+			file.setfloat(Arrays.asList("maxtemperature"),(float)maxtemperature);
+			file.setfloat(Arrays.asList("maxhumidity"),(float)maxhumidity);
+			file.setfloat(Arrays.asList("maxaltitude"),(float)maxaltitude);
+			file.setfloat(Arrays.asList("maxvariety"),(float)maxvariety);
+			file.setfloat(Arrays.asList("chancecustommusic"),(float)chancecustommusic);
+
+			file.setint(Arrays.asList("skycolorR_MORNING"),skycolorMORNING.getRed());
+			file.setint(Arrays.asList("skycolorG_MORNING"),skycolorMORNING.getGreen());
+			file.setint(Arrays.asList("skycolorB_MORNING"),skycolorMORNING.getBlue());
+
+			file.setint(Arrays.asList("skycolorR_DAY"),skycolorDAY.getRed());
+			file.setint(Arrays.asList("skycolorG_DAY"),skycolorDAY.getGreen());
+			file.setint(Arrays.asList("skycolorB_DAY"),skycolorDAY.getBlue());
+
+			file.setint(Arrays.asList("skycolorR_NIGHT"),skycolorNIGHT.getRed());
+			file.setint(Arrays.asList("skycolorG_NIGHT"),skycolorNIGHT.getGreen());
+			file.setint(Arrays.asList("skycolorB_NIGHT"),skycolorNIGHT.getBlue());
+
+			file.setstring(Arrays.asList("topblock"),topblock);
+			file.setstring(Arrays.asList("fillerblock"),fillerblock);
+
+			String blockedraw=String.join("\n",blockedweathers);
+			file.setstring(Arrays.asList("blockedweathers"),blockedraw);
+
+			file.setbool(Arrays.asList("customtree"),customtree);
+			if(customtree){
+				file.setstring(Arrays.asList("customtreeclass"),customtreeclass);
+			}
+
+			String monstersraw=String.join("\n",spawnablemonsters);
+			file.setstring(Arrays.asList("spawnablemonsters"),monstersraw);
+
+			String musicraw=String.join("\n",music);
+			file.setstring(Arrays.asList("music"),musicraw);
+
+			String creaturesraw=String.join("\n",spawnablecreatures);
+			file.setstring(Arrays.asList("spawnablecreatures"),creaturesraw);
+
+			String waterraw=String.join("\n",spawnablewatercreatures);
+			file.setstring(Arrays.asList("spawnablewatercreatures"),waterraw);
+
+			String ambientraw=String.join("\n",spawnableambientcreatures);
+			file.setstring(Arrays.asList("spawnableambientcreatures"),ambientraw);
+
+			try{
+				file.save();
+			}catch(Exception e){
+				logger.error("could not save "+filepath);
+				logger.error(e.getMessage());
+			}
+		}
 		public biomedata(String namespace,String filepath,Logger logger) throws TDF_ERR {
 
 			TDF_FILE file=new TDF_FILE(
@@ -107,7 +175,6 @@ public class biomes {
 			String blockedraw = file.getstring(Arrays.asList("blockedweathers"));
 			if (blockedraw == null) blockedraw = "";
 			blockedweathers = blockedraw.split("\\r?\\n");
-			hassnow = file.getbool(Arrays.asList("hassnow"));
 
 			customtree = file.getbool(Arrays.asList("customtree"));
 			if (customtree) {
