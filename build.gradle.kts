@@ -71,10 +71,13 @@ repositories {
 dependencies {
     minecraft("::${btaVersion.get()}")
     mappings(loom.layered {})
+	include("com.github.kin-fuyuki:tiny-java:0.8_1")
 	implementation("com.github.kin-fuyuki:tiny-java:0.8_1")
     // https://piston-data.mojang.com/v1/objects/43db9b498cb67058d2e12d394e6507722e71bb45/client.jar
     modRuntimeOnly("objects:client:43db9b498cb67058d2e12d394e6507722e71bb45")
 	implementation("com.paulscode:soundsystem:20120107")
+	implementation("org.reflections:reflections:0.10.2")
+	include("org.reflections:reflections:0.10.2")
     // If you do not need Halplibe you can comment out or delete this line.
     modImplementation("turniplabs:halplibe:${halplibeVersion.get()}")
     modImplementation("turniplabs:modmenu-bta:${modMenuVersion.get()}")
