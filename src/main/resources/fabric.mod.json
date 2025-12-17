@@ -3,7 +3,7 @@
 	"id": "kstrabiomes",
 	"version": "${version}",
 	"name": "kstrabiomes",
-	"description": "This mod aims to help new BTA modders.",
+	"description": "biome creation tool for bta",
 	"authors": [
 		"kinfuyuki"
 	],

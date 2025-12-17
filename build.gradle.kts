@@ -3,6 +3,7 @@ plugins {
 	alias(libs.plugins.loom)
 	alias(libs.plugins.lwjgl)
     java
+	`maven-publish`
 }
 val modVersion = providers.gradleProperty("mod_version")
 val modGroup = providers.gradleProperty("mod_group")
@@ -19,6 +20,9 @@ loom {
 repositories {
     mavenCentral()
 	maven("https://jitpack.io")
+	maven("http://kosumi.ddns.net:60000/mvnrepo"){
+		isAllowInsecureProtocol = true
+	}
     maven("https://maven.fabricmc.net/") { name = "Fabric" }
     maven("https://maven.thesignalumproject.net/infrastructure") { name = "SignalumMavenInfrastructure" }
     maven("https://maven.thesignalumproject.net/releases") { name = "SignalumMavenReleases" }
@@ -45,8 +49,8 @@ lwjgl {
 }
 dependencies {
     minecraft("::${libs.versions.bta.get()}")
-	include("com.github.kin-fuyuki:tiny-java:0.8_1")
-	implementation("com.github.kin-fuyuki:tiny-java:0.8_1")
+	include("tiny-java:tiny-java:0.8")
+	implementation("tiny-java:tiny-java:0.8")
 	implementation("org.reflections:reflections:0.10.2")
 	include("org.reflections:reflections:0.10.2")
 	implementation("com.paulscode:soundsystem:20120107")
@@ -132,3 +136,42 @@ tasks {
 }
 // Removes LWJGL2 dependencies
 configurations.configureEach { exclude(group = "org.lwjgl.lwjgl") }
+publishing {
+	publications {
+		register<MavenPublication>("mavenJava") {
+			from(components["java"])
+			groupId = modGroup.get()
+			artifactId = base.archivesName.get().lowercase()
+			version = modVersion.get()
+			pom {
+				name.set(modName.get())
+				description.set("biome creation tool for bta")
+				url.set("https://github.com/kin-fuyuki/kstrabiomes")
+				licenses {
+					license {
+						name.set("GNU Affero General Public License v3.0")
+						url.set("https://www.gnu.org/licenses/agpl-3.0.txt")
+						distribution.set("repo")
+					}
+				}
+				developers {
+					developer {
+						id.set("kin-fuyuki")
+						name.set("kin fuyuki")
+					}
+				}
+				scm {
+					connection.set("scm:git:git://github.com/kin-fuyuki/kstrabiomes.git")
+					developerConnection.set("scm:git:ssh://github.com:kin-fuyuki/kstrabiomes.git")
+					url.set("https://github.com/kin-fuyuki/kstrabiomes")
+				}
+			}
+		}
+	}
+	repositories {
+		maven {
+			name = "localmaven"
+			url = uri("../maven")
+		}
+	}
+}
