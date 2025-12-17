@@ -5,7 +5,6 @@ import net.minecraft.client.gui.options.components.OptionsComponent;
 
 public class listfieldcomponent extends classoption implements OptionsComponent {
 	Minecraft mc;
-	com.formdev.flatlaf.
 	public listfieldcomponent(String translationKey, Class type) {
 		super(translationKey, type);
 	}
