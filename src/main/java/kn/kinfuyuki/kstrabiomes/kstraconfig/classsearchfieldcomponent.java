@@ -1,4 +1,4 @@
-package kn.kinfuyuki.kstrabiomes;
+package kn.kinfuyuki.kstrabiomes.kstraconfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ButtonElement;
@@ -6,9 +6,6 @@ import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.TextFieldElement;
 import net.minecraft.client.gui.options.components.OptionsComponent;
 import net.minecraft.client.gui.text.TextFieldEditor;
-import net.minecraft.core.block.Block;
-import net.minecraft.core.block.Blocks;
-import net.minecraft.core.lang.I18n;
 import net.minecraft.core.sound.SoundCategory;
 import org.lwjgl.input.Keyboard;
 import org.reflections.Reflections;

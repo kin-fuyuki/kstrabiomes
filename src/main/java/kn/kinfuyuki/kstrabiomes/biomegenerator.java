@@ -1,6 +1,8 @@
 package kn.kinfuyuki.kstrabiomes;
 
+import kn.kinfuyuki.kstrabiomes.kstraconfig.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.options.components.BooleanOptionComponent;
 import net.minecraft.client.gui.options.components.FloatOptionComponent;
 import net.minecraft.client.gui.options.components.OptionsCategory;
 import net.minecraft.client.gui.options.data.OptionsPage;
@@ -8,15 +10,13 @@ import net.minecraft.client.gui.options.data.OptionsPages;
 import net.minecraft.client.option.GameSettings;
 import net.minecraft.client.option.OptionBoolean;
 import net.minecraft.client.option.OptionFloat;
-import net.minecraft.client.option.OptionString;
+import net.minecraft.core.entity.Mob;
+import net.minecraft.core.entity.animal.MobAnimal;
+import net.minecraft.core.entity.animal.MobWaterAnimal;
+import net.minecraft.core.entity.monster.MobMonster;
 import net.minecraft.core.item.Items;
 import net.minecraft.core.world.biome.Biome;
-import net.minecraft.core.world.biome.Biomes;
 import net.minecraft.core.world.generate.feature.WorldFeature;
-import net.minecraft.core.world.generate.feature.tree.WorldFeatureTree;
-import net.minecraft.core.world.generate.feature.tree.spooner.WorldFeatureSpoonerTreeProcedural;
-
-import java.util.concurrent.Callable;
 
 import static kn.kinfuyuki.kstrabiomes.main.LOGGER;
 
@@ -44,12 +44,18 @@ public class biomegenerator {
 	public static OptionBoolean SNOWY;
 	public static classoption<WorldFeature> CUSTOMTREE;
 	public static classoption<Biome> CUSTOMBIOMECLASS;
+	public static classoption<MobMonster> MONSTERS;
+	public static classoption<MobWaterAnimal> WATERMOBS;
+
+	public static classoption<Mob> OTHERMOBS;
+	public static classoption<MobAnimal> AMBIENTMOBS;
 
 	public static void init(){try{
 
 		CUSTOMTREE=new classoption("", WorldFeature.class);
 		CUSTOMBIOMECLASS=new classoption("", Biome.class);
 		GameSettings se= Minecraft.getMinecraft().gameSettings;
+		SNOWY=new OptionBoolean(se,"snows",false);
 		MINTEMPERATURE = new OptionFloat(se,"mintemperature",0.0f);
 		MINHUMIDITY = new OptionFloat(se,"minhumidity",0.0f);
 		MINALTITUDE = new OptionFloat(se,"minaltitude",0.0f);
@@ -92,7 +98,14 @@ done.args.add(0);
 				.withComponent(new OptionsCategory("biome class:"))
 				.withComponent(CUSTOMBIOMECLASS)
 				.withComponent(new classsearchfieldcomponent(CUSTOMBIOMECLASS))
-
+				.withComponent(new OptionsCategory("do snow:"))
+				.withComponent(new BooleanOptionComponent(SNOWY))
+				.withComponent(new OptionsCategory(""))
+				.withComponent(new OptionsCategory("what to spawn"))
+				.withComponent(new OptionsCategory("mobs:"))
+				.withComponent(new OptionsCategory("ambient mobs:"))
+				.withComponent(new OptionsCategory("aquatic mobs:"))
+				.withComponent(new OptionsCategory("monsters:"))
 
 
 

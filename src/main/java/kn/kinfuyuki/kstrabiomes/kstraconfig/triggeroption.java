@@ -1,14 +1,9 @@
-package kn.kinfuyuki.kstrabiomes;
+package kn.kinfuyuki.kstrabiomes.kstraconfig;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ButtonElement;
-import net.minecraft.client.gui.options.OptionsButtonElement;
 import net.minecraft.client.gui.options.components.ButtonComponent;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.List;
 
 import static kn.kinfuyuki.kstrabiomes.main.LOGGER;
 

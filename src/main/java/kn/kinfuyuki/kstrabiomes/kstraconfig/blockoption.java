@@ -1,37 +1,19 @@
-package kn.kinfuyuki.kstrabiomes;
+package kn.kinfuyuki.kstrabiomes.kstraconfig;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.PlayerLocal;
-import net.minecraft.client.entity.player.PlayerLocalMultiplayer;
 import net.minecraft.client.gui.ButtonElement;
 import net.minecraft.client.gui.ItemElement;
 import net.minecraft.client.gui.options.components.OptionsComponent;
 import net.minecraft.client.render.Font;
-import net.minecraft.client.render.RenderBlockCache;
-import net.minecraft.client.render.RenderBlocks;
-import net.minecraft.client.render.TextureManager;
-import net.minecraft.client.render.block.model.BlockModel;
-import net.minecraft.client.render.block.model.BlockModelStandard;
 import net.minecraft.client.render.tessellator.Tessellator;
-import net.minecraft.client.render.texture.Texture;
 import net.minecraft.client.render.texture.stitcher.TextureRegistry;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
-import net.minecraft.core.entity.player.Player;
 import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.Items;
 import net.minecraft.core.lang.I18n;
-import net.minecraft.core.player.Session;
 import net.minecraft.core.sound.SoundCategory;
-import net.minecraft.core.util.helper.Side;
-import net.minecraft.core.world.World;
-import net.minecraft.core.world.generate.feature.WorldFeaturePumice;
 import org.lwjgl.opengl.GL11;
-
-import java.util.Map;
-import java.util.function.BiConsumer;
-
-import static kn.kinfuyuki.kstrabiomes.main.LOGGER;
 
 public class blockoption implements OptionsComponent {
 

@@ -1,13 +1,10 @@
-package kn.kinfuyuki.kstrabiomes;
+package kn.kinfuyuki.kstrabiomes.kstraconfig;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ButtonElement;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.TextFieldElement;
-import net.minecraft.client.gui.options.components.OptionsCategory;
 import net.minecraft.client.gui.options.components.OptionsComponent;
-import net.minecraft.client.gui.options.data.OptionsPage;
-import net.minecraft.client.gui.options.data.OptionsPageRegistry;
 import net.minecraft.client.gui.text.TextFieldEditor;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.Blocks;
@@ -17,8 +14,6 @@ import org.lwjgl.input.Keyboard;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static kn.kinfuyuki.kstrabiomes.main.LOGGER;
 
 public class blocksearchfieldcomponent implements OptionsComponent, TextFieldElement.ITextChangeListener{
 
