@@ -1,41 +1,34 @@
 package kn.kinfuyuki.kstrabiomes;
 
+import kn.kinfuyuki.kstrabiomes.biome.biggerbiomesoverworld;
+import kn.kinfuyuki.kstrabiomes.biome.biomeambiance;
 import kn.kinfuyuki.kstrabiomes.mixin.biomeprovideroverworldaccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.block.Blocks;
 import net.minecraft.core.entity.Mob;
 import net.minecraft.core.entity.SpawnListEntry;
 import net.minecraft.core.enums.MobCategory;
-import net.minecraft.core.world.biome.Biome;
 import net.minecraft.core.world.biome.Biomes;
 import net.minecraft.core.world.biome.data.BiomeRange;
 import net.minecraft.core.world.biome.data.BiomeRangeMap;
-import net.minecraft.core.world.biome.provider.BiomeProviderOverworld;
 import net.minecraft.core.world.weather.Weather;
 import net.minecraft.core.world.weather.Weathers;
 import org.slf4j.Logger;
 import tiny.TDF_FILE;
 import tiny.tdf.TDF_ERR;
-import tiny.tdf.TDF_TYPE;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.*;
 import java.util.List;
-import java.util.function.BiConsumer;
 
-import static kn.kinfuyuki.kstrabiomes.biomeambiance.BGMUSIC;
+import static kn.kinfuyuki.kstrabiomes.biome.biomeambiance.BGMUSIC;
 import static kn.kinfuyuki.kstrabiomes.main.getmc;
-import static tiny.TERM.fatal;
 
 public class biomes {
-	public static Map<String,Map<String,biomeambiance>> XTRABIOMES=new HashMap<>();
+	public static Map<String,Map<String, biomeambiance>> XTRABIOMES=new HashMap<>();
 	public static Map<String,Map<String, Icon>> XTRABIOMESICONS=new HashMap<>();
 	public static class biomedata{
 		public String generator;
@@ -55,7 +48,8 @@ public class biomes {
 		public String[] spawnablemonsters, spawnablecreatures,
 				spawnablewatercreatures, spawnableambientcreatures;
 
-		public void save(String namespace,String filepath,Logger logger)throws TDF_ERR{
+		public void save(String namespace,String filepath,Logger logger)throws TDF_ERR {
+
 			TDF_FILE file=new TDF_FILE(
 				getmc().toPath()
 					.resolve("kstrabiomes").resolve(namespace).resolve(filepath)
@@ -208,6 +202,7 @@ public class biomes {
 	}
 	public static void registermusic(Logger logger){
 		File folder=new File(Minecraft.getMinecraft().getMinecraftDir(),"kstrabiomes");
+		if (folder.exists())
 		for (File f:folder.listFiles()
 		) {
 			String namespace=f.getName();
@@ -228,6 +223,7 @@ public class biomes {
 	public static void registerbiomes(Logger logger){
 
 		File folder=new File(getmc(),"kstrabiomes");
+		if (folder.exists())
 		for (File f:folder.listFiles()
 			 ) {
 			String namespace=f.getName();

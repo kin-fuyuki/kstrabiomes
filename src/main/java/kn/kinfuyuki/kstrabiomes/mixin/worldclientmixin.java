@@ -1,11 +1,10 @@
 package kn.kinfuyuki.kstrabiomes.mixin;
 
-import kn.kinfuyuki.kstrabiomes.biomeambiance;
+import kn.kinfuyuki.kstrabiomes.biome.biomeambiance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.camera.ICamera;
 import net.minecraft.client.world.WorldClient;
 import net.minecraft.core.util.phys.Vec3;
-import net.minecraft.core.world.World;
 import net.minecraft.core.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

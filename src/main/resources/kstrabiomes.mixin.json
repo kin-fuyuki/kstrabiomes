@@ -5,7 +5,8 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "biomeprovideroverworldaccessor","biomeprovideroverworldmixin"
+    "biomeprovideroverworldaccessor","biomeprovideroverworldmixin",
+    "biomerangemapmixin"
   ],
   "client": [
     "fogmgrmixin","soundenginemixin","worldclientmixin",

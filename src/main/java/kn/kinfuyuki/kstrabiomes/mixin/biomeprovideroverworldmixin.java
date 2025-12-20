@@ -1,7 +1,5 @@
 package kn.kinfuyuki.kstrabiomes.mixin;
 
-import kn.kinfuyuki.kstrabiomes.biomeambiance;
-import net.minecraft.core.world.biome.Biome;
 import net.minecraft.core.world.biome.Biomes;
 import net.minecraft.core.world.biome.data.BiomeRange;
 import net.minecraft.core.world.biome.data.BiomeRangeMap;

@@ -1,10 +1,8 @@
 package kn.kinfuyuki.kstrabiomes.mixin;
 
-import kn.kinfuyuki.kstrabiomes.biomeambiance;
+import kn.kinfuyuki.kstrabiomes.biome.biomeambiance;
 import kn.kinfuyuki.kstrabiomes.clientinitializer;
-import kn.kinfuyuki.kstrabiomes.main;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScreenMainMenu;
 import net.minecraft.client.option.GameSettings;
 import net.minecraft.client.sound.*;
 import net.minecraft.client.world.WorldClient;
@@ -23,10 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import paulscode.sound.SoundSystem;
 
-import javax.sound.sampled.*;
 import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.Random;
 import java.util.concurrent.locks.Lock;
 

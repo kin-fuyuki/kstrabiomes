@@ -49,8 +49,8 @@ lwjgl {
 }
 dependencies {
     minecraft("::${libs.versions.bta.get()}")
-	include("tiny-java:tiny-java:0.8")
-	implementation("tiny-java:tiny-java:0.8")
+	include("tiny:tiny:0.8")
+	implementation("tiny:tiny:0.8")
 	implementation("org.reflections:reflections:0.10.2")
 	include("org.reflections:reflections:0.10.2")
 	implementation("com.paulscode:soundsystem:20120107")

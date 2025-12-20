@@ -1,32 +1,26 @@
 package kn.kinfuyuki.kstrabiomes.mixin;
 
-import kn.kinfuyuki.kstrabiomes.biomeambiance;
+import kn.kinfuyuki.kstrabiomes.biome.biomeambiance;
 import kn.kinfuyuki.kstrabiomes.clientinitializer;
-import kn.kinfuyuki.kstrabiomes.config;
-import kn.kinfuyuki.kstrabiomes.main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenPhotoMode;
 import net.minecraft.client.gui.modelviewer.ScreenModelViewer;
 import net.minecraft.client.render.FogManager;
 import net.minecraft.client.render.OpenGLHelper;
-import net.minecraft.client.render.RenderBlockCache;
 import net.minecraft.client.render.camera.CameraUtil;
 import net.minecraft.client.render.colorizer.Colorizers;
 import net.minecraft.client.world.WorldClient;
 import net.minecraft.core.block.material.Material;
 import net.minecraft.core.util.helper.MathHelper;
-import net.minecraft.core.util.phys.Vec3;
 import net.minecraft.core.world.Dimension;
 import net.minecraft.core.world.biome.Biome;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 import java.awt.*;

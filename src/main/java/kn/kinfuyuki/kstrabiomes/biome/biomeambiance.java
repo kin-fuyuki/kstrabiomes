@@ -1,18 +1,6 @@
-package kn.kinfuyuki.kstrabiomes;
+package kn.kinfuyuki.kstrabiomes.biome;
 
-import net.betterthanadventure.sound.LibraryLWJGL3OpenAL;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.render.FogManager;
-import net.minecraft.client.sound.SoundEntry;
-import net.minecraft.client.sound.SoundEvent;
-import net.minecraft.client.sound.SoundRepository;
-import net.minecraft.core.item.ItemDiscMusic;
-import net.minecraft.core.world.biome.Biome;
 import net.minecraft.core.world.biome.BiomeDesert;
-import net.minecraft.core.world.biome.Biomes;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 
 import java.awt.*;
 import java.io.File;
