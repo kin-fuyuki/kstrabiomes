@@ -1,17 +1,9 @@
-# KSTRABIOMES
-extra biomes + custom biomes configuration + ambiance mod
+# KINKIT
+custom data mod
 
-the biomes must be stored under:
-.minecraft/kstrabiomes/\<choose a name for your biome package\>/\<biome name\>.tdf
+the data must be stored under:
+.minecraft/kinkit/\<data type\>/\<choose a name for your biome package\>/\<data name\>.tdf
 
-[tiny data format reference](https://plugins.jetbrains.com/plugin/29360-tiny-lang/)
+data types: biome, item, block, dimension and entity
 
-# instructions
-### creating biomes:
-
-
-
-# support
-please request features on [here](https://github.com/kin-fuyuki/kstrabiomes/issues/new?labels=enhancement)
-
-please report bugs on [here](https://github.com/kin-fuyuki/kstrabiomes/issues/new?labels=bug)
+currently supported data types: biome
